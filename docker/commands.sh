@@ -1,89 +1,322 @@
-# Проверить версию Docker
-docker --version
+# Docker — Основные команды
 
-# Проверить информацию о Docker (версии, конфигурация)
-docker info  # New
+## Containers
 
-# Список всех контейнеров (включая остановленные)
-docker ps -a
+# Создать и запустить контейнер
+docker run [FLAGS] IMAGE [COMMAND]
 
-# Список только запущенных контейнеров
+# Запуск контейнера в интерактивном режиме
+docker run -it IMAGE  # new
+
+# Запуск контейнера в фоне (detached режим)
+docker run -d IMAGE  # new
+
+# Запуск контейнера с именем
+docker run -d --name NAME IMAGE  # new
+
+# Проброс порта наружу
+docker run -p HOST:CONTAINER IMAGE  # new
+
+# Подключение тома
+docker run -v HOST_PATH:CONTAINER_PATH IMAGE  # new
+
+# Список запущенных контейнеров (короткая форма)
 docker ps
 
-# Запустить контейнер из образа {image_name} с именем {container_name} и интерактивной консолью
-docker run -it --name {container_name} {image_name}
+# Список запущенных контейнеров (полная форма)
+docker container ls
 
-# Запустить контейнер в фоне (detached mode)
-docker run -d --name {container_name} {image_name}
+# Все контейнеры, включая остановленные
+docker ps -a
 
-# Запустить контейнер с пробросом портов {host_port}:{container_port}
-docker run -d -p {host_port}:{container_port} --name {container_name} {image_name}
+# Запустить остановленный контейнер
+docker container start CONTAINER
 
-# Список всех образов
+# Корректная остановка контейнера
+docker container stop CONTAINER
+
+# Мгновенная остановка контейнера (SIGKILL)
+docker kill CONTAINER  # new
+
+# Перезапустить контейнер
+docker container restart CONTAINER
+
+# Выполнить команду в контейнере
+docker container exec CONTAINER COMMAND
+
+# Запустить bash внутри работающего контейнера
+docker exec -it CONTAINER bash  # new
+
+# Подключение к работающему контейнеру
+docker container attach CONTAINER
+
+# Приостановить контейнер
+docker container pause CONTAINER
+
+# Возобновить приостановленный контейнер
+docker container unpause CONTAINER
+
+# Переименовать контейнер
+docker container rename OLD_NAME NEW_NAME
+
+# Просмотр логов контейнера
+docker container logs CONTAINER
+
+# Статистика использования ресурсов
+docker container stats
+
+# Удалить все остановленные контейнеры
+docker container prune
+
+# Показать процессы внутри контейнера
+docker container top CONTAINER  # new
+
+# Изменить ресурсы работающего контейнера
+docker container update --memory 512m --cpus 1 CONTAINER  # new
+
+---
+
+## Images
+
+# Собрать образ из Dockerfile
+docker image build -t NAME .
+
+# Сборка образа в текущей директории
+docker build .  # new
+
+# Сборка образа с именем и тегом
+docker build . -t NAME:TAG  # new
+
+# Список локальных образов
+docker image ls
+
+# Короткая форма списка образов
 docker images
 
-# Скачать (pull) образ из Docker Hub или другого реестра
-docker pull {image_name}
+# Скачать образ
+docker image pull IMAGE
 
-# Отправить (push) образ в реестр
-docker push {image_name}
+# Скачать образ с Docker Hub
+docker pull IMAGE  # new
 
-# Создать образ из Dockerfile в текущей папке с тегом {image_name}:{tag}
-docker build -t {image_name}:{tag} .
+# Поиск образов на Docker Hub
+docker search NAME  # gpt
 
-# Удалить контейнер {container_name} (текущий остановленный)
-docker rm {container_name}
+# Удалить образ
+docker image rm IMAGE
 
-# Принудительно удалить контейнер {container_name}, если он запущен
-docker rm -f {container_name}  # New
+# Информация об образе
+docker image inspect IMAGE
 
-# Удалить образ {image_name}:{tag}
-docker rmi {image_name}:{tag}
+# Удалить неиспользуемые образы
+docker image prune
 
-# Удалить все остановленные контейнеры и неиспользуемые образы, тома, сети
-docker system prune -a  # New
+# Присвоить тег образу
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]  # new
 
-# Подключиться к работающему контейнеру {container_name} в интерактивный режим
-docker exec -it {container_name} /bin/bash
+# Просмотр истории изменений образа
+docker history IMAGE  # new
 
-# Просмотр логов контейнера {container_name}
-docker logs {container_name}
+# Сохранить образ в файл
+docker save IMAGE > file.tar  # new
 
-# Просмотр последних N строк логов контейнера {container_name}
-docker logs --tail N {container_name}  # New
+# Загрузить образ из файла
+docker load < file.tar  # new
 
-# Следить за логами контейнера в реальном времени
-docker logs -f {container_name}
+---
 
-# Остановить контейнер {container_name}
-docker stop {container_name}
+## Volumes
 
-# Перезапустить контейнер {container_name}
-docker restart {container_name}
+# Создать том
+docker volume create NAME
 
-# Список всех сетей Docker
-docker network ls
-
-# Создать новую сеть Docker {network_name}
-docker network create {network_name}  # New
-
-# Подключить контейнер к сети
-docker network connect {network_name} {container_name}  # New
-
-# Отсоединить контейнер от сети
-docker network disconnect {network_name} {container_name}  # New
-
-# Список всех томов Docker
+# Список томов
 docker volume ls
 
-# Создать том Docker {volume_name}
-docker volume create {volume_name}  # New
+# Информация о томе
+docker volume inspect NAME
 
-# Подключить том к контейнеру
-docker run -v {volume_name}:{container_path} {image_name}  # New
+# Кастомный вывод информации о томе
+docker volume inspect VOLUME -f 'json .'  # new
 
-# Удалить том Docker {volume_name}
-docker volume rm {volume_name}  # New
+# Удалить том
+docker volume rm NAME
 
-# Получить подробную информацию о контейнере {container_name}
-docker inspect {container_name}  # New
+# Удалить неиспользуемые тома
+docker volume prune
+
+---
+
+## Networks
+
+# Создать сеть
+docker network create NAME
+
+# Создать сеть с подсетью и шлюзом
+docker network create -d bridge --subnet 192.168.10.0/24 --gateway 192.168.10.1 NAME  # new
+
+# Список сетей
+docker network ls
+
+# Информация о сети
+docker network inspect NAME
+
+# Кастомный вывод информации о сети
+docker network inspect NETWORK -f 'json .'  # new
+
+# Подключить контейнер к сети
+docker network connect NETWORK CONTAINER
+
+# Отключить контейнер от сети
+docker network disconnect NETWORK CONTAINER
+
+# Удалить сеть
+docker network rm NAME
+
+---
+
+## Docker Compose
+
+# Запуск сервисов
+docker compose up
+
+# Запуск сервисов в фоне
+docker compose up -d
+
+# Сборка и запуск сервисов
+docker compose up --build  # new
+
+# Список контейнеров
+docker compose ps
+
+# Выполнить команду в сервисе
+docker compose exec SERVICE COMMAND
+
+# Просмотр логов
+docker compose logs
+
+# Перезапуск конкретного сервиса
+docker compose restart SERVICE  # new
+
+# Остановить конкретный сервис
+docker compose stop SERVICE  # new
+
+# Удалить сервис
+docker compose rm SERVICE  # new
+
+# Остановить и удалить сервисы
+docker compose down
+
+# Проверка конфигурации Compose
+docker compose config  # new
+
+---
+
+## System & Info
+
+# Версия Docker
+docker version
+
+# Информация о Docker
+docker info
+
+# Использование диска
+docker system df
+
+# Подробная информация о диске
+docker system df -v  # new
+
+# Статистика всех контейнеров
+docker stats
+
+# Просмотр событий в реальном времени
+docker system events  # new
+
+# Очистка неиспользуемых ресурсов
+docker system prune
+
+# Полная очистка контейнеров, томов и образов
+docker system prune -a --volumes  # new
+
+---
+
+## Registries
+
+# Войти в Docker Hub
+docker login
+
+# Выйти из Docker Hub
+docker logout
+
+# Загрузить образ на Hub
+docker push IMAGE
+
+# Скачать образ с Hub
+docker pull IMAGE
+
+---
+
+## Flags
+
+# Запустить в фоне
+-d, --detach
+
+# Интерактивный режим + терминал
+-it
+
+# Задать имя контейнера
+--name NAME
+
+# Проброс порта
+-p HOST:CONTAINER
+
+# Подключить том
+-v HOST_PATH:CONTAINER_PATH  # new
+
+# Переменная окружения
+-e KEY=VALUE
+
+# Загрузить переменные из файла
+--env-file PATH
+
+# Запуск от имени пользователя
+-u USERNAME
+
+# Автоматически удалить при остановке
+--rm
+
+# Связать контейнеры
+--link CONTAINER:ALIAS
+
+# Подключение к сети
+--network NETWORK
+
+# Лимит памяти
+-m MEMORY
+
+# Лимит CPU
+--cpus COUNT
+
+# Политика перезапуска
+--restart POLICY
+
+# Открыть порт внутри контейнера
+--expose PORT
+
+# Добавить метку
+--label KEY=VALUE
+
+# Рабочая директория
+-w /PATH
+
+# Привилегированный режим
+--privileged
+
+# UID и GID пользователя
+--user UID:GID
+
+# Имя хоста контейнера
+--hostname NAME
+
+# DNS сервер
+--dns IP
