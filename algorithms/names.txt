@@ -1,0 +1,12 @@
+Хэш таблицы — hashTable
+Точки и отрезки — intervals
+Бинарный поиск — binarySearch
+Стек — stack
+Префексный массив — prefixSum
+Односвязный список — linkedList
+Перебор комбинаций — backtracking
+Деревья — trees
+Графы — graphs
+Динамическое программирование — dynamicProgramming
+
+

@@ -1,4 +1,4 @@
-package twopointers
+package algorithms
 
 /*
 Два указателя - 17,7%
