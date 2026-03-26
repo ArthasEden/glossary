@@ -1,35 +1,43 @@
-# Подключиться к базе
-psql -U {user} -h {host} -d {db_name}
+# Создать БД с владельцем по умолчанию (postgres)
+sudo -u postgres createdb <database_name>
 
-# Подключиться к локальной базе без указания имени
-psql -U {user}
+# Создать БД с указанием владельца
+sudo -u postgres createdb <database_name> -O <owner_name>
 
-# Выйти из psql
-\q
+# Создать нового пользователя PostgreSQL
+sudo -u postgres createuser <username>
 
-# Список баз
-\l
+# Удалить пользователя PostgreSQL
+sudo -u postgres dropuser <username>
 
-# Переключиться на другую базу
-\c {db_name}
+# Показать список БД
+sudo -u postgres psql -l
 
-# Создать базу данных
-createdb {db_name}
+# Подключиться к БД от имени системного пользователя postgres
+sudo -u postgres psql -d <database_name>
 
-# Удалить базу данных
-dropdb {db_name}
+# Подключиться к БД от имени конкретного пользователя PostgreSQL
+sudo -u postgres psql -d <database_name> -U <username>
 
-# Сделать резервную копию базы
-pg_dump -U {user} -h {host} -d {db_name} > backup.sql
+# Удалить БД
+sudo -u postgres dropdb <database_name>
 
-# Восстановить базу из резервной копии
-psql -U {user} -h {host} -d {db_name} < backup.sql
+# Проверить статус PostgreSQL
+sudo systemctl status postgresql@16-main.service
 
-# Выполнить SQL из файла
-\i {file.sql}
+# Перезапустить PostgreSQL
+sudo systemctl restart postgresql@16-main.service
 
-# Показать информацию о соединении
-\conninfo
+# Посмотреть логи
+sudo tail -f /var/log/postgresql/postgresql-16-main.log
 
-# Показать список пользователей и ролей
-\du
+# Задать пароль пользователю arthas в PostgreSQL
+sudo -u postgres psql -c "ALTER USER arthas WITH PASSWORD 'ваш_пароль';"
+
+# Подключиться через pgAdmin или любым клиентом
+# Хост: localhost
+# Порт: 5432
+# База: study
+# Пользователь: arthas
+# Пароль: ваш_пароль
+psql -h localhost -p 5432 -d study -U arthas
