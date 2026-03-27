@@ -4,20 +4,15 @@
 # -seq (sequence)  — последовательный номер + имя
 migrate create -ext sql -dir migrations -seq init
 
-# Применить миграции
-# -path     — путь к папке с миграциями
-# -database — строка подключения к БД
-# up        — применить миграции
-# <номер>   — количество миграций (опционально)
-migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" up
+# Работа с миграцией для конкретной БД по ключу
+# up - применить все новые миграции
+# down - откатить одну миграцию
+# down -all - откатить все миграции
+# drop - удалить всё (все таблицы, данные, схемы)
+# version - показать текущую версию
+# force <version> - принудительно установить версию (без применения миграций). Можно использовать если "version is dirty"
+# goto <version> - перейти к конкретной версии (применить/откатить нужные)
+#--------------------------------------------------------------------
+#?sslmode=disable — это параметр подключения к PostgreSQL, который отключает SSL/TLS шифрование при соединении с базой данных.
 
-# Откатить миграции
-# down      — откатить миграции
-migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" down
-
-# Принудительно установить версию миграции (сбросить dirty state)
-# force <версия> — установить указанную версию без применения миграций
-migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" force 0
-
-# Удалить все таблицы из БД (включая schema_migrations)
-migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" drop
+migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" <key>
