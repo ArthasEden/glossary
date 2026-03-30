@@ -41,14 +41,12 @@ import "strings"
 2. Работа с частотой элементов
 */
 func isPalindromePermutation(s string) bool {
-	// 1. Подсчёт. Ключевая проблема - понять, что именно будет ключом. В данном примере ключ - символ, значение - частота
 	count := make(map[rune]int)
 
 	for _, char := range s {
 		count[char]++
 	}
 
-	// 2. Обработка. Проверяем, что нечётное число повторений не больше одного
 	oddCount := 0
 	for _, freq := range count {
 		if freq%2 == 1 {
@@ -77,7 +75,7 @@ func isPalindromePermutation(s string) bool {
 func chooseKey(words []string) map[string]int {
 	counts := make(map[string]int)
 	for _, word := range words {
-		counts[word]++ // <-- выбор ключа
+		counts[word]++
 	}
 	return counts
 }
@@ -97,19 +95,16 @@ KV-VK - 14,3%
 2. Нужно искать топ-k по некоторому свойству
 */
 func frequencySort(s string) string {
-	// 1. KV. Подсчёт
 	count := make(map[rune]int)
 	for _, char := range s {
 		count[char]++
 	}
 
-	// 2. VK (инверсия).Составление списка частотности
 	freqList := make([][]rune, len(s)+1)
 	for char, freq := range count {
 		freqList[freq] = append(freqList[freq], char)
 	}
 
-	// 3. Формирование результата собирая его с конца
 	var result strings.Builder
 	for freq := len(freqList) - 1; freq > 0; freq-- {
 		for _, char := range freqList[freq] {

@@ -33,7 +33,10 @@ import "strconv"
 2. Требуется работать с подряд идущими элементами
 */
 func kElementsMaxSum(nums []int, k int) int {
-	// 1. Накопление, где суммируем первые k элементов
+	if len(nums) == 0 || k > len(nums) {
+		return 0
+	}
+
 	windowSum := 0
 	for i := 0; i < k; i++ {
 		windowSum += nums[i]
@@ -41,10 +44,7 @@ func kElementsMaxSum(nums []int, k int) int {
 
 	maxSum := windowSum
 
-	// 2. Цикл для перебора остальных окон
 	for r := k; r < len(nums); r++ {
-
-		// 3. Переход к следующему окну. Ключевая проблема - придумать верную формулу перехода. В данном примере мы вычитаем левый элемент и прибавляем правый
 		l := r - k
 		windowSum = windowSum + nums[r] - nums[l]
 		if windowSum > maxSum {
@@ -69,27 +69,25 @@ func kElementsMaxSum(nums []int, k int) int {
 2. Один элемент принадлежит одной группе (групы не пересекаются)
 */
 func compressRanges(nums []int) []string {
-	//1. Инициализация, где l,r = 0
+	if len(nums) == 0 {
+		return []string{}
+	}
+
 	l := 0
 	r := 0
 	result := make([]string, 0)
 
-	//2. Внешний цикл пока l не вышел за границу
 	for l < len(nums) {
-
-		//3. Внутренний цикл, расширяем окно увеличивая ганицу окна r пока выплняется условие группы. Ключевая проблема - придумать условие расширения
 		for r+1 < len(nums) && nums[r]+1 == nums[r+1] {
 			r++
 		}
 
-		//4. Обработка окна
 		if r != l {
 			result = append(result, strconv.Itoa(nums[l])+"->"+strconv.Itoa(nums[r]))
 		} else {
 			result = append(result, strconv.Itoa(nums[l]))
 		}
 
-		//5. Переход к следюущей группе
 		l = r + 1
 		r = r + 1
 	}
@@ -111,37 +109,25 @@ func compressRanges(nums []int) []string {
 2. Один эелмент принадлежит одной групппе (группы пересекаются)
 */
 func longestOneWithFlips(nums []int, k int) int {
-	//1. Инициализация l, r, result, где r = -1 чтобы не обрабатывать первый эелемент отдельно
 	l := 0
-	r := -1
-
-	//2. Инициализация состояния окна. Ключевая проблема - выбрать, что является состоянием окна, продумать условие расширения, не забывая обновлять состояния.
-	// 		В данном примере состояние окна zeroCount - число нулей внутри окна;
-	//		Условие расширения - пока следующий элемент == 1 или zeroCount < k
 	result := 0
 	zeroCount := 0
 
-	//3. Внешний цикл
-	for l < len(nums) {
-
-		//4. Расширение окна
-		for r+1 < len(nums) && (nums[r+1] == 1 || zeroCount < k) {
-			if nums[r+1] == 0 {
-				zeroCount++
-			}
-			r++
+	for r := 0; r < len(nums); r++ {
+		if nums[r] == 0 {
+			zeroCount++
 		}
 
-		//5. Обработка окна
+		for zeroCount > k {
+			if nums[l] == 0 {
+				zeroCount--
+			}
+			l++
+		}
+
 		if r-l+1 > result {
 			result = r - l + 1
 		}
-
-		//6. Сужение окна
-		if nums[l] == 0 {
-			zeroCount--
-		}
-		l++
 	}
 	return result
 }

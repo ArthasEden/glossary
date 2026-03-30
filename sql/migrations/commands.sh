@@ -15,4 +15,4 @@ migrate create -ext sql -dir migrations -seq init
 #--------------------------------------------------------------------
 #?sslmode=disable — это параметр подключения к PostgreSQL, который отключает SSL/TLS шифрование при соединении с базой данных.
 
-migrate -path migrations/ -database "postgres://user:pass@localhost:5432/db?sslmode=disable" <key>
+migrate -path migrations/ -database "postgres://YouUserName:YourPassword@YoutHostName:5432/YourDataBaseName?sslmode=disable" <key>

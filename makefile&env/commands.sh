@@ -1,0 +1,2 @@
+# Версия Makefile
+make --version
